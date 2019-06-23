@@ -27,6 +27,8 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
 						.get()                        
 						.then((res) => {  
 							msg.channel.createMessage(`${res.currently.summary}, ${res.currently.temperature}F (${convert(res.currently.temperature).from('F').to('C').toPrecision(4)}C) / feels like ${res.currently.apparentTemperature}F (${convert(res.currently.apparentTemperature).from('F').to('C').toPrecision(4)}C) | High: ${res.daily.data[0].temperatureHigh}F (${convert(res.daily.data[0].temperatureHigh).from('F').to('C').toPrecision(4)}C) | Low: ${res.daily.data[0].temperatureLow}F (${convert(res.daily.data[0].temperatureLow).from('F').to('C').toPrecision(4)}C) | Humidity: ${(res.currently.humidity * 100).toPrecision(2)}% | Wind: ${["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"][(Math.floor((res.currently.windBearing / 22.5) + 0.5) % 16)]} @ ${res.currently.windSpeed}mph (${convert(res.currently.windSpeed).from('m/h').to('km/h').toPrecision(4)}km/h) | ${res.daily.data[0].summary} ${Math.floor((res.daily.data[0].precipProbability * 100))}% chance of precipitation (${res.daily.data[0].precipType}) (${geoText})`);
+							if(res.alerts)
+								msg.channel.createMessage(`${res.alerts[0].title} - ${res.alerts[0].description} - ${res.alerts[0].uri}`);
 						}) 
 						.catch((err) => {
 							msg.channel.createMessage("There was some error: " + err);
